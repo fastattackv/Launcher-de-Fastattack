@@ -1,0 +1,21 @@
+Procédure d'installation du launcher de Fastattack
+
+1-Vérifier que les modules requis pour fonctionner sont installés:
+Modules python requis pour fonctionner :
+Modules préinstallés:
+-os
+-sys
+-tkinter
+-shutil
+-PIL
+Modules à installer:
+-pickle
+Pour installer avec pip tapez la commande (pip install pickle-mixin)
+
+2-Télécharger le fichier .zip qui contient les fichiers.py
+
+3-Extraire les fichiers du fichier .zip dans le dossier choisi pour l'installation
+
+4-Mettre le raccourci de l'application à un endroit accesible (par exemple sur le bureau)
+
+5-Lancer l'application

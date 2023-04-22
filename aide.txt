@@ -1,0 +1,49 @@
+Fichier d'aide pour le launcher de Fastattack:
+
+Ce fichier contient:
+-Aide sur les fonctionnalités du launcher
+-Aide à résolution d'erreurs courantes
+
+
+Fonctionnalitées du launcher:
+
+-Boutons des jeux/bonus:
+Les jeux et bonus affichés au centre de la page (aucun jeu n'est enregistré au 1er lancement du launcher) peuvent être séléctionnés pour pouvoir effectuer des actions sur ces derniers.
+
+-Boutons jeux/bonus/reset/pageS et pageP:
+Les boutons jeux et bonus permettent de naviguer entre les pages des jeux et bonus enregistrés.
+Le bouton reset permet de désélctionner tous les jeux et bonus actifs et de revenir à la page 1.
+Les boutons pageS et pagesP permettent de naviguer entre les différentes pages de jeux et bonus enregistrés: si plus de 16 jeux/bonus sont enregistrés, ils ne pourront pas tous s'afficher sur le 1ère page et seront donc sur les pages suivantes.
+
+-Bouton jouer:
+Le bouton jouer lance les jeux et bonus séléctionnés. Si aucun jeu ni bonus n'est séléctionné, un message d'erreur s'affichera.
+
+-Boutons ajouts/suppression:
+Les boutons d'ajout et de suppression de jeux et bonus sont situés en haut à gauche de la fenètre
+Le bouton "ajouter un jeu" demande de séléctionner un raccourci de jeu à ajouter au launcher.
+Le bouton "ajouter un jeu .url" demande un chemin de jeu à ajouter. Les jeux à ajouter par ce bouton sont les jeux steam et epic games (en .url).
+Le bouton "ajout jeux multiples" demande de séléctionner un dossier. Tous les fichiers de ce dossier seront lus et les fichiers .lnk (raccourci), .url et .exe seront ajoutés au launcher. ATTENTION de bouton ajoute des jeux et non pas des bonus.
+Le bouton "ajouter un bonus" demande de séléctionner un raccourci de bonus à ajouter au launcher.
+Le bouton "supprimer jeu/bonus" supprime les jeux et bonus séléctionnés du launcher. Si aucun jeu/bonus n'est séléctionné la launcher demandera si vous souhaitez supprimer un jeu/bonus par son nom.
+
+Bouton console:
+Le bouton console est pour l'instant inutile, il servira dans une prochaine mise à jour à débugger/modifier ou modder le launcher.
+
+
+Aide à la résolution d'erreurs courantes:
+
+-Une fenêtre m'indique qu'il manque des jeux/bonus au démarage de l'application:
+Si cette erreur s'affiche, les jeux/bonus concernées ont été supprimés/déplacés: pour la résoudre il faut remettre les jeux/bonus à leur répertoire d'origine ou les supprimer puis les réajouter dans le launcher
+
+-Durant l'ajout d'un jeu, l'erreur "défaillance irrémédiable" s'affiche:
+Les jeux avec des raccourcis en .url (jeux steam ou epic games) ne peuvent être ajoutés par la 1ère méthode d'ajout, pour les ajouter, séléctionnez simplement "ajouter un jeu .url" puis copiez le chemin du raccourci dans la fenêtre affichée
+
+-En séléctionnant ajout jeux mutiples, des erreurs sur l'ajout d'icones/des jeux apparaissent:
+Si vous séléctionnez un dossier pour ajouter des jeux multiples mais que ce dernier contient des raccourcis qui ne sont pas des jeux (ex: raccourci de dossier) la launcher va essayer de les ajouter mais ne pourra pas trouver leurs icones. Ces erreurs ne sont pas problematiques et ne causent pas de problèmes au launcher. Vous devrez tout de même supprimer les dossiers qui sesont glissés parmis vos jeux.
+
+-Crash instantanné au démarrage:
+Si l'application crash au démarrage, vérifiiez que le fichier init.py existe bien dans le répertoire d'origine de l'application
+Si l'application crash toujours, essayez de la réinstaller
+
+-Freeze quand souris sur le fichier d'application:
+Certains antivirus (testé sur kaspersky) font freeze l'explorateur windows quand l'utilisateur interagit avec le .exe. Cela est normal, l'appliaction n'est pas en train de d'abimer votre machine: l'antivirus vérifie juste si l'application n'est pas dangereuse
