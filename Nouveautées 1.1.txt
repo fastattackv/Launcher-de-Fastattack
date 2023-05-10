@@ -1,0 +1,12 @@
+Ajouts:
+Ajout d'un fichier .exe pour l'installation
+Bouton avancé qui contient: affichage de la console (à venir), mise à jour du launcher, désinstallation du launcher (à venir), accès au fichiers locaux du launcher, affichage des infos du launcher (version...)
+Fichier Infos.txt qui contient la version de l'app (pour les MAJ)
+
+
+Corrections:
+Fichiers .py détectés comme manquants alors qu'ils sont là
+Suppression check de modules et des fichiers .py (compris dans le .exe)
+Erreur de suppression de raccourci pour les jeux qui n'en avaient pas (.exe)
+Modification des fichiers de stockage (jeux et bonus) en .txt pour pouvoir les modifier manuellement
+Modifications de certaines erreurs pour qu'elles s'affichent dans l'interface utilisateur (et non plus la console)

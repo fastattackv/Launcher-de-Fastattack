@@ -32,6 +32,9 @@ Le bouton console est pour l'instant inutile, il servira dans une prochaine mise
 
 Aide à la résolution d'erreurs courantes:
 
+-Durant l'installation, windows empêche d'exécuter l'application car elle pourrait endommager la machine:
+Puisque l'application n'a pas de license et n'est pas vérifiée par windows, windows empèche l'exécution de l'application. L'application n'est pas dangereuse (le code source est disponible sur github). Pour installer l'application il faut faire afficher plus de détails puis exécuter quand même.
+
 -Une fenêtre m'indique qu'il manque des jeux/bonus au démarage de l'application:
 Si cette erreur s'affiche, les jeux/bonus concernées ont été supprimés/déplacés: pour la résoudre il faut remettre les jeux/bonus à leur répertoire d'origine ou les supprimer puis les réajouter dans le launcher
 
@@ -39,10 +42,10 @@ Si cette erreur s'affiche, les jeux/bonus concernées ont été supprimés/dépl
 Les jeux avec des raccourcis en .url (jeux steam ou epic games) ne peuvent être ajoutés par la 1ère méthode d'ajout, pour les ajouter, séléctionnez simplement "ajouter un jeu .url" puis copiez le chemin du raccourci dans la fenêtre affichée
 
 -En séléctionnant ajout jeux mutiples, des erreurs sur l'ajout d'icones/des jeux apparaissent:
-Si vous séléctionnez un dossier pour ajouter des jeux multiples mais que ce dernier contient des raccourcis qui ne sont pas des jeux (ex: raccourci de dossier) la launcher va essayer de les ajouter mais ne pourra pas trouver leurs icones. Ces erreurs ne sont pas problematiques et ne causent pas de problèmes au launcher. Vous devrez tout de même supprimer les dossiers qui sesont glissés parmis vos jeux.
+Si vous séléctionnez un dossier pour ajouter des jeux multiples mais que ce dernier contient des raccourcis qui ne sont pas des jeux (ex: raccourci de dossier) la launcher va essayer de les ajouter mais ne pourra pas trouver leurs icones. Ces erreurs ne sont pas problématiques et ne causent pas de problèmes au launcher. Vous devrez tout de même supprimer les dossiers qui se seront glissés parmis vos jeux.
 
 -Crash instantanné au démarrage:
-Si l'application crash au démarrage, vérifiiez que le fichier init.py existe bien dans le répertoire d'origine de l'application
+Si l'application crash au démarrage, vérifiez que le fichier init.py existe bien dans le répertoire d'origine de l'application
 Si l'application crash toujours, essayez de la réinstaller
 
 -Freeze quand souris sur le fichier d'application:
