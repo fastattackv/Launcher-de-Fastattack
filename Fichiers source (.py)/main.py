@@ -1,14 +1,16 @@
-# vérification des fichiers
+# vérification des fichiers et execution des commandes de lancement
 import init
 
-# importations après vérification
+# autres importations:
 import interactions_os as IntOS
 import get_icons as getI
+import Terminal
+
 import tkinter as tk
 from tkinter import messagebox, filedialog, simpledialog
 import os
 import shutil
-import sys
+import random
 
 
 # définition des variables globales
@@ -97,6 +99,7 @@ def up_select():
     label_bonus.grid(column=3, row=11, sticky="nswe", padx=5, pady=5, columnspan=2)
 
 
+# Fonctions d'affichage des jeux et bonus
 def show_jeux(page=1):
     cacher()
     global liste_affiche, type_selectionne, page_active
@@ -241,71 +244,7 @@ def cacher():
     bouton_destroy.grid(column=1, row=2, sticky="nswe", columnspan=4, rowspan=8)
 
 
-def play():
-    if len(dic_selectionne["liste_jeux_selectionne"]) > 1:
-        messagebox.showwarning("Launcher de Fastattack", "Plusieurs jeux sélectionnés")
-    elif len(dic_selectionne["liste_jeux_selectionne"]) == 0:
-        if dic_selectionne["liste_bonus_selectionne"] == []:
-            messagebox.showinfo("Launcher de Fastattack", "Pas de jeux ni de bonus sélectionnés")
-        else:
-            IntOS.lancer("PaS_dE_Jeu_A_LANcER", dic_selectionne["liste_bonus_selectionne"])
-            messagebox.showinfo("Launcher de Fastattack", "Pas de jeux séléctionné : les bonus séléctionnés ont été lancés")
-    else:
-        # quand 1 seul jeu est select
-        IntOS.lancer(dic_selectionne["liste_jeux_selectionne"][0], dic_selectionne["liste_bonus_selectionne"])
-
-
-def add_jeu():
-    path_jeu = filedialog.askopenfilename(title="Ajout jeu")
-    jeu = get_nom_jeu(path_jeu)
-    if jeu != "" and path_jeu is not None:
-        IntOS.add_jeu(jeu, path_jeu)
-        rep = getI.get_icone(path_jeu, jeu)
-        if rep == "ERROR":
-            messagebox.showwarning("Launcher de Fastattack", "L'importation de l'icone a échouée")
-        elif rep == "OK":
-            reset()
-    elif jeu == "" and path_jeu is not None:
-        messagebox.showerror("Ajout de jeu", "La récupération du nom du fichier a échoué")
-
-
-def add_jeu2():
-    path_jeu = simpledialog.askstring("Launcher de Fastattack", "chemin du jeu/raccourci")
-    if path_jeu is not None:
-        if path_jeu.startswith('"') and path_jeu.endswith('"'):
-            path_jeu = path_jeu.removeprefix('"')
-            path_jeu = path_jeu.removesuffix('"')
-        jeu = get_nom_jeu(path_jeu)
-        if jeu != "":
-            if path_jeu.endswith(".url"):
-                shutil.copyfile(path_jeu, rf"fichiers\jeux url\{jeu}.url")
-                path_jeu = rf"fichiers\jeux url\{jeu}.url"
-                IntOS.add_jeu(jeu, path_jeu)
-                rep = getI.get_icone(path_jeu, jeu)
-                if rep == "ERROR":
-                    messagebox.showwarning("Launcher de Fastattack", "L'importation de l'icone a échouée")
-                elif rep == "OK":
-                    reset()
-            else:
-                messagebox.showwarning("Launcher de Fastattack", "Le fichier séléctionné n'est pas un raccourci .url")
-        elif jeu == "":
-            messagebox.showerror("Ajout de jeu", "La récupération du nom du fichier a échoué")
-
-
-def add_bonus():
-    path_bonus = filedialog.askopenfilename()
-    bonus = get_nom_jeu(path_bonus)
-    if bonus != "" and path_bonus is not None:
-        IntOS.add_bonus(bonus, path_bonus)
-        rep = getI.get_icone(path_bonus, bonus)
-        if rep == "ERROR":
-            messagebox.showwarning("Launcher de Fastattack", "L'importation de l'icone a échouée")
-        elif rep == "OK":
-            reset()
-    elif bonus == "" and path_bonus is not None:
-        messagebox.showerror("Ajout de bonus", "La récupération du nom du fichier a échoué")
-
-
+# Fonctions des boutons de contrôle d'affichage
 def page_suivante():
     cacher()
     page_a_donner = page_active + 1
@@ -332,30 +271,54 @@ def up_page():
     label_page_a.grid(column=0, row=5)
 
 
-def supprimer():
-    jeux_a_supp = dic_selectionne["liste_jeux_selectionne"]
-    if jeux_a_supp != []:
-        if messagebox.askyesno("Launcher de Fastattack", f"Voulez vous supprimer les jeux {jeux_a_supp}"):
-            for item in jeux_a_supp:
-                IntOS.supprimer("jeux", item)
-                reset()
-    bonus_a_supp = dic_selectionne["liste_bonus_selectionne"]
-    if bonus_a_supp != []:
-        if messagebox.askyesno("Launcher de Fastattack", f"Voulez vous supprimer les bonus {bonus_a_supp}"):
-            for item in bonus_a_supp:
-                IntOS.supprimer("bonus", item)
-                reset()
-    if jeux_a_supp == [] and bonus_a_supp == []:
-        if messagebox.askyesno("Launcher de Fastattack", "Pas de jeux/bonus séléctionné\rVoulez-vous en supprimer un par son nom ?"):
-            jeu_a_supp = simpledialog.askstring("Launcher de Fastattack", "Entrez le nom du jeu/bonus à supprimer")
-            if jeu_a_supp in IntOS.dic_jeux:
-                if messagebox.askyesno("Launcher de Fastattack", f"Voulez vous supprimer le jeu {bonus_a_supp}"):
-                    IntOS.supprimer("jeux", jeu_a_supp)
-                    show_jeux()
-            elif jeu_a_supp in IntOS.dic_bonus:
-                if messagebox.askyesno("Launcher de Fastattack", f"Voulez vous supprimer le bonus {bonus_a_supp}"):
-                    IntOS.supprimer("bonus", jeu_a_supp)
-                    show_bonus()
+# Fonctions des ajouts
+def ajout():
+    type_add = simpledialog.askstring("Ajout", "Que voulez vous ajouter ?\rAjouter un jeu [J]\rAjouter un jeu .url [U]\rAjouter plusieurs jeux [M]\rAjouter un bonus [B]")
+    if type_add == "J":
+        add_jeu()
+    elif type_add == "U":
+        add_jeu2()
+    elif type_add == "M":
+        add_jeux_multiples()
+    elif type_add == "B":
+        add_bonus()
+
+
+def add_jeu():
+    path_jeu = filedialog.askopenfilename(title="Ajout jeu")
+    jeu = get_nom_jeu(path_jeu)
+    if jeu != "" and path_jeu != "":
+        IntOS.add_jeu(jeu, path_jeu)
+        rep = getI.get_icone(path_jeu, jeu)
+        if rep == "ERROR":
+            messagebox.showwarning("Launcher de Fastattack", "L'importation de l'icone a échouée")
+        elif rep == "OK":
+            reset()
+    elif jeu == "" and path_jeu != "":
+        messagebox.showerror("Ajout de jeu", "La récupération du nom du fichier a échoué")
+
+
+def add_jeu2():
+    path_jeu = simpledialog.askstring("Launcher de Fastattack", "chemin du jeu/raccourci")
+    if path_jeu is not None:
+        if path_jeu.startswith('"') and path_jeu.endswith('"'):
+            path_jeu = path_jeu.removeprefix('"')
+            path_jeu = path_jeu.removesuffix('"')
+        jeu = get_nom_jeu(path_jeu)
+        if jeu != "":
+            if path_jeu.endswith(".url"):
+                shutil.copyfile(path_jeu, rf"fichiers\jeux url\{jeu}.url")
+                path_jeu = rf"fichiers\jeux url\{jeu}.url"
+                IntOS.add_jeu(jeu, path_jeu)
+                rep = getI.get_icone(path_jeu, jeu)
+                if rep == "ERROR":
+                    messagebox.showwarning("Launcher de Fastattack", "L'importation de l'icone a échouée")
+                elif rep == "OK":
+                    reset()
+            else:
+                messagebox.showwarning("Launcher de Fastattack", "Le fichier séléctionné n'est pas un raccourci .url")
+        elif jeu == "":
+            messagebox.showerror("Ajout de jeu", "La récupération du nom du fichier a échoué")
 
 
 def add_jeux_multiples():
@@ -391,6 +354,75 @@ def add_jeux_multiples():
         show_jeux()
 
 
+def add_bonus():
+    path_bonus = filedialog.askopenfilename()
+    bonus = get_nom_jeu(path_bonus)
+    if bonus != "" and path_bonus != "":
+        IntOS.add_bonus(bonus, path_bonus)
+        rep = getI.get_icone(path_bonus, bonus)
+        if rep == "ERROR":
+            messagebox.showwarning("Launcher de Fastattack", "L'importation de l'icone a échouée")
+        elif rep == "OK":
+            reset()
+    elif bonus == "" and path_bonus != "":
+        messagebox.showerror("Ajout de bonus", "La récupération du nom du fichier a échoué")
+
+
+# Fonctions de modifications des jeux/bonus
+def supprimer():
+    jeux_a_supp = dic_selectionne["liste_jeux_selectionne"]
+    bonus_a_supp = dic_selectionne["liste_bonus_selectionne"]
+    if jeux_a_supp != []:
+        if messagebox.askyesno("Launcher de Fastattack", f"Voulez vous supprimer les jeux {jeux_a_supp}"):
+            for item in jeux_a_supp:
+                IntOS.supprimer("jeux", item)
+                reset()
+    if bonus_a_supp != []:
+        if messagebox.askyesno("Launcher de Fastattack", f"Voulez vous supprimer les bonus {bonus_a_supp}"):
+            for item in bonus_a_supp:
+                IntOS.supprimer("bonus", item)
+                reset()
+    if jeux_a_supp == [] and bonus_a_supp == []:
+        if messagebox.askyesno("Launcher de Fastattack", "Pas de jeux/bonus séléctionné\rVoulez-vous en supprimer un par son nom ?"):
+            jeu_a_supp = simpledialog.askstring("Launcher de Fastattack", "Entrez le nom du jeu/bonus à supprimer")
+            if jeu_a_supp in IntOS.dic_jeux:
+                if messagebox.askyesno("Launcher de Fastattack", f"Voulez vous supprimer le jeu {jeu_a_supp}"):
+                    IntOS.supprimer("jeux", jeu_a_supp)
+                    show_jeux()
+            elif jeu_a_supp in IntOS.dic_bonus:
+                if messagebox.askyesno("Launcher de Fastattack", f"Voulez vous supprimer le bonus {jeu_a_supp}"):
+                    IntOS.supprimer("bonus", jeu_a_supp)
+                    show_bonus()
+            elif jeu_a_supp is not None:
+                messagebox.showerror("Suppression", "Nom du jeu/bonus entré inconnu")
+
+
+def modifier():
+    jeux_a_modif = dic_selectionne["liste_jeux_selectionne"]
+    bonus_a_modif = dic_selectionne["liste_bonus_selectionne"]
+    if jeux_a_modif != []:
+        for item in jeux_a_modif:
+            nouv_nom = simpledialog.askstring("Modifier", f"Nouveau nom de {item}")
+            if nouv_nom != "":
+                if item in IntOS.dic_jeux:
+                    IntOS.modifier_nom("jeux", item, nouv_nom)
+                else:
+                    messagebox.showerror("Modifier", f"Le jeu {item} n'est pas enregistré dans le launcher")
+        reset()
+    if bonus_a_modif != []:
+        for item in bonus_a_modif:
+            nouv_nom = simpledialog.askstring("Modifier", f"Nouveau nom de {item}")
+            if nouv_nom != "":
+                if item in IntOS.dic_bonus:
+                    IntOS.modifier_nom("bonus", item, nouv_nom)
+                else:
+                    messagebox.showerror("Modifier", f"Le bonus {item} n'est pas enregistré dans le launcher")
+        reset()
+    if jeux_a_modif == [] and bonus_a_modif == []:
+        messagebox.showinfo("Modifier", "Aucun jeu/bonus sélectionné")
+
+
+# Autres fonctions
 def get_nom_jeu(path: str) -> str:
     try:
         if path.endswith(".url") or path.endswith(".lnk") or path.endswith(".exe"):
@@ -410,13 +442,55 @@ def get_nom_jeu(path: str) -> str:
     return nom
 
 
+def play():
+    if len(dic_selectionne["liste_jeux_selectionne"]) > 1:
+        messagebox.showwarning("Launcher de Fastattack", "Plusieurs jeux sélectionnés")
+    elif len(dic_selectionne["liste_jeux_selectionne"]) == 0:
+        if dic_selectionne["liste_bonus_selectionne"] == []:
+            messagebox.showinfo("Launcher de Fastattack", "Pas de jeux ni de bonus sélectionnés")
+        else:
+            IntOS.lancer("PaS_dE_Jeu_A_LANcER", dic_selectionne["liste_bonus_selectionne"])
+            messagebox.showinfo("Launcher de Fastattack", "Pas de jeux séléctionné : les bonus séléctionnés ont été lancés")
+    else:
+        # quand 1 seul jeu est select
+        IntOS.lancer(dic_selectionne["liste_jeux_selectionne"][0], dic_selectionne["liste_bonus_selectionne"])
+
+
+def recherche():
+    item = simpledialog.askstring("Recherche", "Jeu/bonus à rechercher")
+    if item in IntOS.dic_jeux:
+        if messagebox.askyesno("Recherche", f"Jeu {item} trouvé\rVoulez-vous le lancer ?"):
+            IntOS.lancer(item, dic_selectionne["liste_bonus_selectionne"])
+    elif item in IntOS.dic_bonus:
+        if messagebox.askyesno("Recherche", f"Bonus {item} trouvé\rVoulez-vous le lancer ?"):
+            IntOS.lancer("PaS_dE_Jeu_A_LANcER", [item])
+    elif item is None:
+        pass
+    else:
+        messagebox.showinfo("Recherche", f"{item} est introuvable")
+
+
+def trier():
+    messagebox.showinfo("Trier", "Fonction de tri à venir")
+
+
+def jeu_random():
+    if len(IntOS.dic_jeux["liste_jeux"]) > 1:
+        numero = random.randint(0, len(IntOS.dic_jeux["liste_jeux"]))
+        jeu = IntOS.dic_jeux["liste_jeux"][numero]
+        if messagebox.askyesno("Random", f"Le jeu choisi par l'aléatoire est {jeu}\rVoulez-vous le lancer ?"):
+            IntOS.lancer(jeu, dic_selectionne["liste_bonus_selectionne"])
+    else:
+        messagebox.showwarning("Random", "Pas assez de jeux enregistrés dans le launcher")
+
+
 def avance():
     rep = simpledialog.askstring("Avancé", "Que voulez vous faire ?\rModifier l'application [M]\rAfficher la console [C]\rAfficher les informations à propos du launcher [I]")
     if rep == "M":
         rep = simpledialog.askstring("Modification", "Que voulez vous faire ?\rDésinstaller l'application [D]\rMettre à jour l'application [M]\rAccéder aux fichiers locaux [F]")
         if rep == "D":
             if messagebox.askokcancel("Désinstallation", "Êtes vous sûr de vouloir désinstaller l'application ? Toutes les données seront supprimées"):
-                print("désinstaller")
+                messagebox.showinfo("Désinstaller", "Fonction de désinstallation à venir")
         elif rep == "M":
             maj = init.check_maj()
             if maj == 0:
@@ -436,7 +510,8 @@ def avance():
             infos = b.readlines()
         messagebox.showinfo("A propos du launcher", f"Développé par Fastattack\r{infos[0]}")
     elif rep == "C":
-        print("Console à venir")
+        if messagebox.askokcancel("Console", "Le terminal va s'ouvrir dans la console du launcher\rL'interface du launcher sera inutilisable tant que le le terminal est actif"):
+            Terminal.launch()
 
 
 # définition de la fenêtre et de ses paramètres
@@ -470,24 +545,26 @@ bouton_bonus = tk.Button(fen, text="Bonus", command=show_bonus)
 bouton_bonus.grid(column=0, row=1, sticky="nswe", padx=5, pady=5)
 bouton_reset = tk.Button(fen, text="Reset", command=reset)
 bouton_reset.grid(column=0, row=2, sticky="nwe", padx=5, pady=5)
-bouton_lancer = tk.Button(fen, text="Jouer", command=play)
-bouton_lancer.grid(column=0, row=11, sticky="nswe", padx=5, pady=5)
-bouton_add_jeu = tk.Button(fen, text="Ajouter un jeu", command=add_jeu)
-bouton_add_jeu.grid(column=5, row=0, sticky="nwe", padx=5, pady=5)
-bouton_add_jeu2 = tk.Button(fen, text="Ajouter jeu .url", command=add_jeu2)
-bouton_add_jeu2.grid(column=5, row=1, sticky="nwe", padx=5, pady=5)
-bouton_add_jeux = tk.Button(fen, text="Ajout jeux multiples", command=add_jeux_multiples)
-bouton_add_jeux.grid(column=5, row=2, sticky="nswe", padx=5, pady=5)
-bouton_add_bonus = tk.Button(fen, text="Ajouter un bonus", command=add_bonus)
-bouton_add_bonus.grid(column=5, row=3, sticky="nwe", padx=5, pady=5)
-bouton_supp = tk.Button(fen, text="Supprimer jeu/bonus", command=supprimer)
-bouton_supp.grid(column=5, row=4, sticky="nswe", padx=5, pady=5)
-bouton_avance = tk.Button(fen, text="Avancé", command=avance)
-bouton_avance.grid(column=5, row=5, sticky="nswe", padx=5, pady=5)
 bouton_pageS = tk.Button(fen, text="pageS", command=page_suivante)
 bouton_pageS.grid(column=0, row=3, sticky="nswe", padx=5, pady=5)
 bouton_pageP = tk.Button(fen, text="pageP", command=page_precedente)
 bouton_pageP.grid(column=0, row=4, sticky="nswe", padx=5, pady=5)
+bouton_lancer = tk.Button(fen, text="Jouer", command=play)
+bouton_lancer.grid(column=0, row=11, sticky="nswe", padx=5, pady=5)
+bouton_recherche = tk.Button(fen, text="Rechercher", command=recherche)
+bouton_recherche.grid(column=5, row=0, sticky="nswe", padx=5, pady=5)
+bouton_tri = tk.Button(fen, text="Filtrer", command=trier)
+bouton_tri.grid(column=5, row=1, sticky="nswe", padx=5, pady=5)
+bouton_random = tk.Button(fen, text="Random", command=jeu_random)
+bouton_random.grid(column=5, row=2, sticky="nswe", padx=5, pady=5)
+bouton_add = tk.Button(fen, text="Ajouter", command=ajout)
+bouton_add.grid(column=5, row=3, sticky="nswe", padx=5, pady=5)
+bouton_supp = tk.Button(fen, text="Supprimer", command=supprimer)
+bouton_supp.grid(column=5, row=4, sticky="nswe", padx=5, pady=5)
+bouton_modifier = tk.Button(fen, text="Modifier", command=modifier)
+bouton_modifier.grid(column=5, row=5, sticky="nswe", padx=5, pady=5)
+bouton_avance = tk.Button(fen, text="Avancé", command=avance)
+bouton_avance.grid(column=5, row=11, sticky="nswe", padx=5, pady=5)
 
 
 # commandes de start

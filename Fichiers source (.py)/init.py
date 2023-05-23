@@ -1,8 +1,11 @@
 import os
 import requests
+import Terminal
 
 
 def check_files():
+    """Check si tous les fichiers nécéssaires au launcher sont présent, si ce n'est pas le cas, il les créé
+    """
     if not os.path.isdir(r"fichiers"):
         os.mkdir(r"fichiers")
     if not os.path.isdir(r"fichiers\jeux url"):
@@ -18,11 +21,24 @@ def check_files():
     if not os.path.isfile(r"Infos.txt"):
         f = open("Infos.txt", "x")
         f.close()
+    if not os.path.isfile(r"Commandes.txt"):
+        f = open("Commandes.txt", "x")
+        f.close()
+
+
+def check_commandes():
+    """Check si des commandes ont été entrées dans le fichier Commandes.txt puis les execute sans en informer l'utilisateur
+    """
+    with open("Commandes.txt", "r") as b:
+        lignes = b.readlines()
+    if len(lignes) > 0:
+        for ligne in lignes:
+            Terminal.commande(ligne.split(), hide=True)
 
 
 def check_maj() -> int:
-    """
-    CHeck si une mise à jour est disponible
+    """Check si une mise à jour est disponible
+
     :return: 0 pour pas de MAJ/1 pour MAJ à effectuer/2 si une erreur a eu lieu
     """
     if os.path.isfile("Infos.txt"):
@@ -36,18 +52,20 @@ def check_maj() -> int:
                     print("ERROR: La version n'est pas lisible (fichier Infos.txt)")
                     return 2
                 r = requests.get("https://raw.githubusercontent.com/fastattackv/Launcher-de-Fastattack/main/T%C3%A9l%C3%A9chargements/Infos_git.txt")
-                if r.content[0:8] == b"Version:":
-                    version_git = r.content.replace(b"Version:", b"")
-                    version_git = float(version_git.replace(b"\n", b""))
-                    if version_git == version:
-                        return 0
-                    elif version_git > version:
-                        return 1
+                reponse = str(r.content).removeprefix("b'").replace(r"\n'", "")
+                version_git = ""
+                for lettre in reponse:
+                    if lettre != "\\":
+                        version_git += lettre
                     else:
-                        print("ERROR: La version indiquée est plus récente que la version github. Veuillez vérifier la version manuellement (fichier Infos.txt)")
-                        return 2
+                        break
+                version_git = float(version_git.removeprefix("Version:"))
+                if version_git == version:
+                    return 0
+                elif version_git > version:
+                    return 1
                 else:
-                    print("ERROR: Lecture de la version sur github impossible")
+                    print("ERROR: La version indiquée est plus récente que la version github. Veuillez vérifier la version manuellement (fichier Infos.txt)")
                     return 2
             else:
                 print("ERROR: Mise à jour impossible, version introuvable (fichier Infos.txt)")
@@ -62,6 +80,7 @@ def check_maj() -> int:
 
 # exécution des fonctions
 check_files()
+check_commandes()
 
 
 # Si, durant le modding, voulez ajouter des instructions qui s'exécuteront au lancement du launcher, ajoutez les ici:

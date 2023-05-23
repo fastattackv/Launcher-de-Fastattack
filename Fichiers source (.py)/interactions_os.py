@@ -3,11 +3,10 @@ import win32com.client
 
 
 def lancer(jeu: str, bonus: list):
-    """
-    lance le jeu et le bonus indiqués
+    """lance le jeu et le bonus indiqués
+
     :param jeu: nom du jeu à lancer
     :param bonus: liste contenant les noms des bonus à lancer
-    :return: rien
     """
     if jeu != "PaS_dE_Jeu_A_LANcER":
         try:
@@ -28,11 +27,10 @@ def lancer(jeu: str, bonus: list):
 
 
 def add_jeu(jeu: str, chemin_jeu: str):
-    """
-    ajoute le jeu associé à son path dans le dictionnaire des jeux (et dans la liste du dictionnaire)
+    """ajoute le jeu associé à son path dans le dictionnaire des jeux (et dans la liste du dictionnaire)
+
     :param jeu: jeu à ajouter
     :param chemin_jeu: chemin jeu à ajouter
-    :return: rien
     """
     if jeu != "liste_jeux":
         if jeu not in dic_jeux:
@@ -52,11 +50,10 @@ def add_jeu(jeu: str, chemin_jeu: str):
 
 
 def add_bonus(bonus: str, chemin_bonus: str):
-    """
-    ajoute le bonus associé à son path dans le dictionnaire des bonus (et dans la liste du dictionnaire)
+    """ajoute le bonus associé à son path dans le dictionnaire des bonus (et dans la liste du dictionnaire)
+
     :param chemin_bonus: bonus à ajouter
     :param bonus: chemin bonus à ajouter
-    :return: rien
     """
     if bonus != "liste_bonus":
         if bonus not in dic_bonus:
@@ -76,9 +73,9 @@ def add_bonus(bonus: str, chemin_bonus: str):
 
 
 def check() -> list:
-    """
-    Vérifie si les jeux, bonus et lauchers enregistrés existent toujours
-    :return: une liste contenant 2 listes qui contiennent les items qui n'existent plus, retourne 3 liste vide si tout va bien
+    """Vérifie si les jeux, bonus et lauchers enregistrés existent toujours
+
+    :return: une liste contenant 2 listes qui contiennent les items qui n'existent plus, retourne 3 listes vides si tout va bien
     """
     to_return1 = []
     to_return2 = []
@@ -93,42 +90,80 @@ def check() -> list:
     return [to_return1, to_return2]
 
 
-def modifier(type_item: str, item: str, chemin_item: str):
+def modifier_nom(type_item: str, ancien_nom: str, nouveau_nom: str):
+    """Modifie le nom d'un item enregistré dans le launcher et le nom de l'icone associée
+
+    :param type_item: type de l'item à modifier : jeux/bonus
+    :param ancien_nom: Ancien nom du jeu/bonus dans le launcher
+    :param nouveau_nom: Nouveau nom du jeu/bonus dans le launcher
     """
-    modifie un item enregistré dans le launcher
+    if type_item == "jeux":
+        if ancien_nom in dic_jeux:
+            ancien_path = dic_jeux[ancien_nom]
+            del dic_jeux[ancien_nom]
+            dic_jeux["liste_jeux"].remove(ancien_nom)
+            dic_jeux["liste_jeux"].append(nouveau_nom)
+            dic_jeux[nouveau_nom] = ancien_path
+            dump_txt(dic_jeux, "jeux")
+            if os.path.isfile(rf"fichiers\icones\{ancien_nom}.png"):
+                os.replace(rf"fichiers\icones\{ancien_nom}.png", rf"fichiers\icones\{nouveau_nom}.png")
+            else:
+                print(f"Icone du jeu {nouveau_nom} introuvable")
+        else:
+            print("ERREUR: Le jeu indiqué n'est pas enregistré dans le launcher")
+    elif type_item == "bonus":
+        if ancien_nom in dic_bonus:
+            ancien_path = dic_bonus[ancien_nom]
+            del dic_bonus[ancien_nom]
+            dic_bonus["liste_bonus"].remove(ancien_nom)
+            dic_bonus["liste_bonus"].append(nouveau_nom)
+            dic_bonus[nouveau_nom] = ancien_path
+            dump_txt(dic_bonus, "bonus")
+            if os.path.isfile(rf"fichiers\icones\{ancien_nom}.png"):
+                os.replace(rf"fichiers\icones\{ancien_nom}.png", rf"fichiers\icones\{nouveau_nom}.png")
+            else:
+                print(f"Icone du bonus {nouveau_nom} introuvable")
+        else:
+            print("ERREUR: Le bonus indiqué n'est pas enregistré dans le launcher")
+    else:
+        print("ERREUR: type_item inconnu (fonction modifier->interactions os)")
+
+
+def modifier_path(type_item: str, item: str, chemin_item: str):
+    """Modifie un le chemin d'un item enregistré dans le launcher
+
     :param type_item: type de l'item à modifier : jeux/bonus
     :param item: nom de l'item à modifer
     :param chemin_item: nouveau chemin de l'item à modifier
-    :return: rien
     """
     if type_item == "jeux":
         if item in dic_jeux:
-            exist = True
-            if exist:
-                if os.path.isfile(chemin_item):
-                    dic_jeux[item] = chemin_item
-                    dump_txt(dic_jeux, "jeux")
-                else:
-                    print("ERREUR: Le fichier indiqué n'existe pas (fonction modifier->interactions os)")
+            if os.path.isfile(chemin_item):
+                dic_jeux[item] = chemin_item
+                dump_txt(dic_jeux, "jeux")
+            else:
+                print("ERREUR: Le fichier indiqué n'existe pas (fonction modifier->interactions os)")
+        else:
+            print("ERREUR: Le jeu indiqué n'est pas enregistré dans le launcher")
     elif type_item == "bonus":
         if item in dic_bonus:
-            exist = True
-            if exist:
-                if os.path.isfile(chemin_item):
-                    dic_bonus[item] = chemin_item
-                    dump_txt(dic_bonus, "bonus")
-                else:
-                    print("ERREUR: Le fichier indiqué n'existe pas (fonction modifier->interactions os)")
+            if os.path.isfile(chemin_item):
+                dic_bonus[item] = chemin_item
+                dump_txt(dic_bonus, "bonus")
+            else:
+                print("ERREUR: Le fichier indiqué n'existe pas (fonction modifier->interactions os)")
+        else:
+            print("ERREUR: Le bonus indiqué n'est pas enregistré dans le launcher")
     else:
         print("ERREUR: type_item inconnu (fonction modifier->interactions os)")
 
 
 def supprimer(type_item: str, item: str, introuvable="N"):
-    """
-    supprime le jeu/bonus indiqué + supprime l'icone + le raccourci si besoin
+    """supprime le jeu/bonus indiqué + supprime l'icone + le raccourci si besoin
+
     :param type_item: type de l'item à supprimer ("jeux" ou "bonus")
     :param item: nom de l'item à supprimer enregistré dans le launcher
-    :return: rien
+    :param introuvable: défini si l'item est introuvable (car s'il l'est il n'est pas sélectionnable)
     """
     if type_item == "jeux":
         if item in dic_jeux:
@@ -139,11 +174,11 @@ def supprimer(type_item: str, item: str, introuvable="N"):
                 os.remove(rf"fichiers\Icones\{item}.png")
             except:
                 print("ERREUR: icone introuvable (fonction supprimer->interactions os)")
-            if introuvable == "N" and item.endswith(".url"):
+            if introuvable == "N":
                 try:
                     os.remove(rf"fichiers\jeux url\{item}.url")
                 except:
-                        print("ERREUR: raccourci introuvable (fonction supprimer->interactions os)")
+                    pass
         else:
             print(f"ERREUR: {item} est introuvable (fonction supprimer->interactions os)")
     elif type_item == "bonus":
@@ -162,8 +197,8 @@ def supprimer(type_item: str, item: str, introuvable="N"):
 
 
 def get_exe_from_lnk(chemin_lnk: str) -> str:
-    """
-    renvoie le chemin d'un .exe à partir d'un .lnk
+    """renvoie le chemin d'un .exe à partir d'un .lnk
+
     :param chemin_lnk: chemin du raccourci (.lnk)
     :return: path du .exe
     """
@@ -173,10 +208,9 @@ def get_exe_from_lnk(chemin_lnk: str) -> str:
 
 
 def reset_vars(a_reset: str):
-    """
-    reset les variables des jeux/bonus enregistrés
+    """reset les variables des jeux/bonus enregistrés
+
     :param a_reset: jeux pour reset les jeux/bonus pour reset les bonus/tout pour reset les jeux et bonus
-    :return: rien
     """
     global dic_jeux, dic_bonus
     if a_reset == "jeux":
@@ -201,11 +235,10 @@ def reset_vars(a_reset: str):
 
 
 def dump_txt(a_dump: dict, fichier: str):
-    """
-    Dump le dictionnaire indiqué, ligne par ligne dans le fichier .txt indiqué (jeux ou bonus)
+    """Dump le dictionnaire indiqué, ligne par ligne dans le fichier .txt indiqué (jeux ou bonus)
+
     :param a_dump: dictionnaire à dump dans le fichier .txt
     :param fichier: fichier dans lequel dump le dictionnaire (jeux ou bonus)
-    :return: rien
     """
     str_a_dump = ""
     if fichier == "jeux" and "liste_jeux" in a_dump:

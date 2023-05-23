@@ -12,8 +12,14 @@ with open("Infos.txt", "r") as b:
     lignes = b.readlines()
 version = float(lignes[0].replace("Version:", ""))
 r = requests.get("https://raw.githubusercontent.com/fastattackv/Launcher-de-Fastattack/main/T%C3%A9l%C3%A9chargements/Infos_git.txt")
-version_git = r.content.replace(b"Version:", b"")
-version_git = float(version_git.replace(b"\n", b""))
+reponse = str(r.content).removeprefix("b'").replace(r"\n'", "")
+version_git = ""
+for lettre in reponse:
+    if lettre != "\\":
+        version_git += lettre
+    else:
+        break
+version_git = float(version_git.removeprefix("Version:"))
 print(f"Version actuelle: {version}, Version à installer: {version_git}")
 print("MAJ: Début de la mise à jour")
 
@@ -27,7 +33,7 @@ for proc in psutil.process_iter():
 # Création du dossier MAJ et téléchargement .zip
 print("MAJ: Téléchargement de la nouvelle version")
 os.mkdir("MAJ")
-url = f"https://github.com/fastattackv/Launcher-de-Fastattack/blob/main/Launcher%20de%20Fastattack%20v{version_git}.zip?raw=true"
+url = f"https://github.com/fastattackv/Launcher-de-Fastattack/blob/main/T%C3%A9l%C3%A9chargements/Launcher%20de%20Fastattack%20v{version_git}.zip?raw=true"
 filename = rf"MAJ\Launcher de Fastattack v{version_git}.zip"
 try:
     r = requests.get(url)
@@ -52,7 +58,7 @@ else:
     print("MAJ: Suppression de l'ancienne application")
     if not os.path.isfile("Launcher de Fastattack.exe"):
         print("ERROR: Ancienne application introuvable: arrêt de la mise à jour")
-        os.path.remove("MAJ")
+        os.remove("MAJ")
         input("Entrée pour quitter")
     else:
         os.remove("Launcher de Fastattack.exe")
@@ -60,8 +66,7 @@ else:
         print("MAJ: Installation de la nouvelle version")
         shutil.copy(r"MAJ\Launcher de Fastattack\Launcher de Fastattack.exe", os.getcwd())
         shutil.copy(r"MAJ\Launcher de Fastattack\Infos.txt", os.getcwd())
-        os.remove(r"MAJ\Launcher de Fastattack\Launcher de Fastattack.exe")
-        os.remove(r"MAJ\Launcher de Fastattack\Infos.txt")
+        os.remove("MAJ")
         print("MAJ: Mise à jour terminée avec succès")
         print(f"Version installée: {version_git}")
         input("Entrée pour quitter")

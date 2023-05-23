@@ -1,0 +1,47 @@
+Documentation du launcher de Fastattack
+
+
+Avant de commencer:
+Dans la documentation du terminal, certains termes utilisés peuvent prêter à confusion, voici leurs explications:
+Raccourcis: Sauf si précisé autrement, les raccourcis ne sont pas les fichiers que vous avez donné au launcher pour enregistrer des jeux: ce sont des raccourcis créés par le launcher, dans un dossier spécifique pour pouvoir lancer les applications
+Item: Elément enregistré ou à enregistrer dans le launcher
+
+
+Introduction:
+Le terminal de commande intégré au launcher de Fastattack permet d'exécuter des commandes simples pour résoudre des problèmes de l'application.
+Certaines commandes du terminal permettent de supprimer les informations enregistrées (jeux/icones...). Elles ne peuvent donc pas endommager l'application ou votre système mais peuvent supprimer des données (irrécupérables).
+Les commandes sont donc à exécuter avec précaution pour ne pas perdre de données.
+Tant que le terminal de l'app est lancé, l'interface utilisateur est inutilisable.
+Après avoir utilisé une commande supprimant un raccourci jeu ou bonus enregistré dans le launcher, il est fortement conseillé de relancer le launcher car ces modifications ne sont prises en compte qu'après un redémarrage du launcher.
+Si vous voulez lancer des commandes automatiquement au launcement de l'application, vous pouvez écrire les commandes dans le fichier Commandes.txt qui sera lu au launcment de l'app.
+
+
+Commandes:
+1-quit (pas d'argument)
+La commande quit permet de quitter le terminal donc de pouvoir utiliser l'interface utilisateur.
+
+2-show (1 argument)
+La commande show permet d'afficher dans le terminal le contenu du fichier en argument.
+Arguments: jeux/bonus/infos/commandes
+Exemple:
+show jeux
+
+3-delete (2 arguments)
+La commande delete permet de supprimer un jeu, un bonus (dans jeux.txt ou bonus.txt), une icone ou un raccourci du launcher.
+Le 1er argument spécifie quel est le type de l'objet à supprimer et le 2e spécifie le nom de l'objet à supprimer.
+Puisque les nom des items peuvent contenir des espaces, à partir du 2e argument, tous les mots sont comptabilisés en tant que nom de l'item.
+Arguments:
+1er argument: jeux/bonus/icone/raccourci
+2e argument: nom de l'item à supprimer eregistré dans le launcher (sans extension)
+Exemple:
+delete jeux Apex Legends
+
+
+4-reset (1 argument)
+La commande reset permet de remettre à 0 les fichiers de stockage des jeux et bonus (jeux.txt et bonus.txt) et de supprimer les fichiers associés aux jeux et bonus (icones/raccourcis...).
+Arguments:
+jeux: permet de remettre à 0 le fichier jeux.txt et supprimer les icones/raccourcis associés
+bonus: permet de remettre à 0 le fichier bonus.txt et supprimer les icones/raccourcis associés
+all: reset les fichiers jeux.txt et bonus.txt et supprime tous les icones et raccourcis
+
+5-launch

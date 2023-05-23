@@ -1,11 +1,10 @@
 import requests
 import os
 import zipfile
-import shutil
 
 # demande où installer l'application
 print("Installateur du launcher de Fastattack")
-print("Verion de l'installateur: v1.0, version du launcher à installer: v1.0")
+print("Verion de l'installateur: v1.2, version du launcher à installer: v1.2")
 varb = True
 dossier = ""
 while varb:
@@ -26,7 +25,7 @@ else:
     raccourci = False
 
 # télécharge le fichier .zip qui contient l'application et les fichiers
-url = "https://github.com/fastattackv/Launcher-de-Fastattack/blob/main/Launcher%20de%20Fastattack%20v1.0.zip?raw=true"
+url = "https://github.com/fastattackv/Launcher-de-Fastattack/blob/main/T%C3%A9l%C3%A9chargements/Launcher%20de%20Fastattack%20v1.2.zip?raw=true"
 filename = dossier + r"\Launcher de Fastattack v1.0.zip"
 try:
     r = requests.get(url)
@@ -50,7 +49,7 @@ else:
         import win32com.client
 
         chemin = os.path.join(os.path.join(os.environ['USERPROFILE']), r'Desktop\Launcher de Fastattack.lnk')
-        target = dossier + r"\Launcher de Fastattack v1.0\Launcher de Fastattack.exe"
+        target = dossier + r"\Launcher de Fastattack\Launcher de Fastattack.exe"
 
         shell = win32com.client.Dispatch("WScript.Shell")
         shortcut = shell.CreateShortCut(chemin)

@@ -1,0 +1,13 @@
+Ajouts:
+Modification du nom d'un jeu/bonus dans le launcher
+Recherche de jeu/bonus
+Terminal intégré pour debug/résoudre problèmes (commandes: quit, reset, delete, show)
+Nouveau fichier: Commandes.txt (les commandes avec la syntaxe du terminal entrées dans ce fichier seront lues et exécutées sans le montrer à l'utilisateur (sauf si une erreur a lieu) au lancement de l'application)
+Combinaison des boutons d'ajout en un seul
+Bouton jeu random: séléctionne aléatoirement un jeu dans le launcher et propose de le lancer
+
+Corrections:
+Raccourci sur le bureau qui ne trouve pas l'application
+Erreur "La récupération du nom du fichier a échoué" quand annulation de séléction de jeu/bonus
+Pas de suppression du raccourci .url sauvegardé
+Correction du lien du fichier de MAJ

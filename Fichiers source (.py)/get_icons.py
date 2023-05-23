@@ -5,8 +5,8 @@ from PIL import Image
 
 # quand raccourcis steam = .url
 def get_icone_steam(chemin_jeu: str, jeu: str) -> str:
-    """
-    Copie l'icone du fichier de raccourci steam (.url) au dossier d'icones
+    """Copie l'icone du fichier de raccourci steam (.url) au dossier d'icones
+
     :param chemin_jeu: chemin du raccourci steam
     :param jeu: nom du jeu (qui sera donné à l'icone)
     :return: ERROR si erreur, OK si pas d'erreurs
@@ -42,8 +42,8 @@ def get_icone_steam(chemin_jeu: str, jeu: str) -> str:
 
 # quand raccourci epic = .url
 def get_icone_epic(chemin_jeu: str, jeu: str) -> str:
-    """
-    Obtient le chemin du .exe par le raccourci .url puis extrait l'icone
+    """Obtient le chemin du .exe par le raccourci .url puis extrait l'icone
+
     :param chemin_jeu: chemin du raccourci epic (.url)
     :param jeu: nom du jeu (qui sera donné à l'icone)
     :return: ERROR si erreur, OK si pas d'erreurs
@@ -76,7 +76,7 @@ def get_icone_epic(chemin_jeu: str, jeu: str) -> str:
     return to_return
 
 
-def extract_icon_from_exe(icon_in_path, icon_name, icon_out_path, out_width = 100, out_height = 100):
+def extract_icon_from_exe(icon_in_path, icon_name, icon_out_path, out_width=100, out_height=100):
     # https://techartorg.github.io/python3/python3-snippets/extract_icon_from_exe/   created by bob white (un peu modifié)
     """Given an icon path (exe file) extract it and output at the desired width/height as a png image.
 
@@ -99,21 +99,21 @@ def extract_icon_from_exe(icon_in_path, icon_name, icon_out_path, out_width = 10
     ico_x = win32api.GetSystemMetrics(win32con.SM_CXICON)
     ico_y = win32api.GetSystemMetrics(win32con.SM_CYICON)
 
-    large, small = win32gui.ExtractIconEx(icon_in_path,0)
+    large, small = win32gui.ExtractIconEx(icon_in_path, 0)
     win32gui.DestroyIcon(small[0])
 
-    hdc = win32ui.CreateDCFromHandle( win32gui.GetDC(0) )
+    hdc = win32ui.CreateDCFromHandle(win32gui.GetDC(0))
     hbmp = win32ui.CreateBitmap()
-    hbmp.CreateCompatibleBitmap( hdc, ico_x, ico_y )
+    hbmp.CreateCompatibleBitmap(hdc, ico_x, ico_y)
     hdc = hdc.CreateCompatibleDC()
 
-    hdc.SelectObject( hbmp )
-    hdc.DrawIcon( (0,0), large[0] )
+    hdc.SelectObject(hbmp)
+    hdc.DrawIcon((0, 0), large[0])
 
     bmpstr = hbmp.GetBitmapBits(True)
     icon = Image.frombuffer(
         'RGBA',
-        (32,32),
+        (32, 32),
         bmpstr, 'raw', 'BGRA', 0, 1
     )
 
@@ -125,10 +125,9 @@ def extract_icon_from_exe(icon_in_path, icon_name, icon_out_path, out_width = 10
 
 
 def ico_to_png(chemin_ico: str):
-    """
-    Converti un fichier .ico en .png, ATTENTION le fichier .ico sera supprimé après la conversion
+    """Converti un fichier .ico en .png, ATTENTION le fichier .ico sera supprimé après la conversion
+
     :param chemin_ico: chemin du fichier .ico à convertir (le .png sera dans le même dossier que le .ico)
-    :return: rien
     """
     img = Image.open(chemin_ico)
     chemin_png = chemin_ico.removesuffix(".ico")
@@ -140,8 +139,8 @@ def ico_to_png(chemin_ico: str):
 
 
 def get_icone(chemin_item: str, item: str) -> str:
-    """
-    essaye les différentes fonctions pour récupérer l'icone du jeu/bonus et l'enregistre dans le dossier fichiers\icones
+    r"""Essaye les différentes fonctions pour récupérer l'icone du jeu/bonus et l'enregistre dans le dossier fichiers\icones
+
     :param chemin_item: chemin du jeu/bonus/raccourci duquel il faut enregistrer l'icone
     :param item: nom du jeu/bonus (qui sera donné à l'icone)
     :return: OK si l'icone a été récupérée, ERROR si la récupération de l'icone a échoué
